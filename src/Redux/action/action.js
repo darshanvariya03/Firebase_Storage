@@ -1,12 +1,33 @@
-import { getDatabase, onValue, ref, remove, set, update } from 'firebase/database';
+
 import { app } from '../../firebase';
+import { addDoc, collection, deleteDoc, doc, getDoc, getDocs, getFirestore, updateDoc } from "firebase/firestore";
 
-
-export const ADD_USER = (data) => {
-    const db = getDatabase(app);
+export const GET_USER = () => {
     return async (dispatch) => {
         try {
-            await set(ref(db, `users/${data.userid}`), {
+            const db = getFirestore(app)
+            const data = await collection(db, "user");
+            const alldata = await getDocs(data);
+            dispatch(SET_USER(alldata))
+        } catch (err) {
+            console.log(err);
+            return false;
+        }
+    }
+}
+
+const SET_USER = (data) => {
+    return {
+        type: 'getusers',
+        payload: data
+    }
+}
+
+export const ADD_USER = (data) => {
+    return async (dispatch) => {
+        try {
+            const db = getFirestore(app);
+            const addemp = await addDoc(collection(db, 'users'), {
                 name: data.name,
                 phone: data.phone
             })
@@ -17,16 +38,13 @@ export const ADD_USER = (data) => {
     }
 }
 
-
-export const GET_USER = () => {
+export const DELETE_USER = (userid) => {
     return async (dispatch) => {
         try {
-            const db = await getDatabase(app);
-            const users = await ref(db, 'users');
-            onValue(users, (snapshot) =>{
-                const data = snapshot.val()
-                dispatch(SET_USER(data))
-            })
+            const db = getFirestore(app);
+            const user = doc(db, 'users', userid);
+            await deleteDoc(user)
+            dispatch(GET_USER())
         } catch (err) {
             console.log(err);
             return false;
@@ -34,37 +52,17 @@ export const GET_USER = () => {
     }
 }
 
-const SET_USER = (data) => {
-    return {
-        type: 'setuser',
-        payload: data
-    }
-}
-
-export const DELETE_USER = (id) => {
-    return async(dispatch)=>{
-        try{
-         const db = getDatabase(app);
-         const user = await ref(db,`users/${id}`);
-         alert("Deleted")
-         await remove(user)
-        }catch(err){
-            console.log(err);
-            return false;
-        }
-    }
-}
-
-export const EDIT_USER = (obj) => {
-    const db = getDatabase(app);
-    return async(dispatch)=>{
-        try{
-            const user = await ref(db,`users/${obj.id}`);
-            await update(user,{
-                name : obj.name,
-                phone : obj.phone
+export const EDIT_USER = (data) => {
+    return async (dispatch) => {
+        try {
+            const db = getFirestore(app);
+            const user = await doc(db, 'users', data.id);
+            await updateDoc(user, {
+                name: data.name,
+                phone: data.phone
             })
-        }catch(err){
+            dispatch(GET_USER());
+        } catch (err) {
             console.log(err);
             return false;
         }

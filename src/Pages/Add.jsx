@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { useDispatch } from 'react-redux'
 import { ADD_USER } from '../Redux/action/action';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 const Add = () => {
 
@@ -9,13 +9,11 @@ const Add = () => {
     const dispatch = useDispatch();
     const [name,setName] = useState('')
     const [phone,setPhone] = useState('')
-    let id = Math.floor(Math.random() * 1000)
 
     const handelsubmit = (e) =>{
         e.preventDefault();
         
         let obj = {
-            userid : id,
             name : name,
             phone : phone
         }
@@ -42,6 +40,7 @@ const Add = () => {
                         <td><input type="submit" /></td>
                     </tr>
                 </table>
+                <Link to={`/view`}>view</Link>
             </form>
         </div>
     )

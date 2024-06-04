@@ -3,12 +3,11 @@ const initialstate = {
 }
 
 const crudReducer = (state = initialstate, action) => {
-    switch (action.type) {
-
-        case 'setuser':
-            return {
+    switch(action.type){
+        case 'getusers':
+            return{
                 ...state,
-                users: action.payload
+                users : action.payload
             }
         default:
             return state

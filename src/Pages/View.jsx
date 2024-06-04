@@ -1,19 +1,19 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { DELETE_USER, GET_USER } from '../Redux/action/action';
 import { Link, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 
 const View = () => {
     const navigate = useNavigate();
-
+    
     const dispatch = useDispatch();
-    const record = useSelector(state => state.crud.users);
 
+    useEffect(()=>{
+        dispatch(GET_USER())
+    },[])
 
+    const alluser = useSelector(state => state.crud.users); 
 
-    useEffect(() => {
-        dispatch(GET_USER());
-    }, [])
     return (
         <div>
             <h2 align="center">View User</h2>
@@ -31,15 +31,15 @@ const View = () => {
                 </thead>
                 <tbody>
                     {
-                        record && Object.entries(record).map(([key, value]) => {
+                        [].map((val) => {
                             return (
-                                <tr key={key}>
-                                    <td>{key}</td>
-                                    <td>{value.name}</td>
-                                    <td>{value.phone}</td>
+                                <tr key={val.id}>
+                                    <td>{val.id}</td>
+                                    <td>{val.name}</td>
+                                    <td>{val.phone}</td>
                                     <td>
-                                        <button onClick={() => dispatch(DELETE_USER(key))} >Delete</button>
-                                        <button onClick={() => navigate(`/edit`, { state: [key, value] })}>Edit</button>
+                                        <button onClick={() => dispatch(DELETE_USER(val.id))} >Delete</button>
+                                        <button onClick={() => navigate(`/edit`, { state: val })}>Edit</button>
                                     </td>
                                 </tr>
                             )

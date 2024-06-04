@@ -21,7 +21,7 @@ const Edit = () => {
             name : name,
             phone : phone
         }
-        dispatch(EDIT_USER(obj))
+        // dispatch(EDIT_USER(obj))
         alert('Updated')
         navigate('/view');
 
